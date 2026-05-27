@@ -156,12 +156,3 @@ Registering a library batch
 
 
 ---
-
-Where to go from here
-
-• Use registry_schema.json as the authoritative validator for all registry writes.
-• Implement loader checks for module_path resolution and signature validation before accepting a function.
-• Add CI tests that validate example entries and any new registration code against the schema.
-
-
-For concrete JSON Schema and SQL DDL files see registry_schema.json and sql/001_create_registry_tables.sql in the repository.
