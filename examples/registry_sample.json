@@ -1,1 +1,141 @@
+[
+  {
+    "id": "f-00000000-0000-4000-8000-000000000001",
+    "name": "tokenize_text",
+    "display_name": "Tokenize Text",
+    "module_path": "atomfun.text:tokenize",
+    "category": "text",
+    "subcategories": ["nlp","preprocessing"],
+    "signature": {
+      "inputs": [
+        {
+          "name": "text",
+          "type": "str",
+          "required": true,
+          "description": "Input string to tokenize"
+        },
+        {
+          "name": "lowercase",
+          "type": "bool",
+          "required": false,
+          "description": "Whether to lowercase tokens (default: true)"
+        },
+        {
+          "name": "preserve_punctuation",
+          "type": "bool",
+          "required": false,
+          "description": "Keep punctuation as separate tokens (default: false)"
+        }
+      ],
+      "output": {
+        "type": "List[str]",
+        "description": "List of token strings"
+      },
+      "pure": true,
+      "side_effects": [],
+      "complexity": "O(n)"
+    },
+    "description": "Split input text into a list of tokens with optional lowercasing and punctuation handling.",
+    "examples": [
+      "tools.tokenize_text('Hello, world!')",
+      "tools.tokenize_text('Hello, world!', lowercase=False)"
+    ],
+    "tags": ["tokenize", "nlp", "text-preprocessing"],
+    "source": "core",
+    "contributor_id": null,
+    "license": "Apache-2.0",
+    "visibility": "public",
+    "created_at": "2026-05-01T12:00:00Z",
+    "updated_at": "2026-05-01T12:00:00Z",
+    "version": "1.0.0",
+    "usage_count": 0,
+    "last_used_at": null,
+    "payout_config": null,
+    "ai_metadata": {
+      "analyzer_version": "v0.1.0",
+      "confidence": 0.98,
+      "suggested_names": ["split_tokens", "text_tokenizer"],
+      "key_phrases": ["tokenize text", "split into tokens", "lowercase option"],
+      "generated_description": "Tokenize a string into a list of tokens; supports optional lowercasing and punctuation preservation.",
+      "generated_examples": ["tools.tokenize_text('This is a test.')"],
+      "tags": ["tokenize", "nlp"],
+      "category_suggestion": "text",
+      "quality_flags": [],
+      "analyzed_at": "2026-05-01T12:05:00Z"
+    },
+    "integrity_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "id": "f-3a9b2c4d-0000-4000-8000-000000000002",
+    "name": "correlation_matrix",
+    "display_name": "Correlation Matrix",
+    "module_path": "mylib.math:correlation_matrix",
+    "category": "math",
+    "subcategories": ["statistics", "matrix"],
+    "signature": {
+      "inputs": [
+        {
+          "name": "rows",
+          "type": "Sequence[Dict[str, Any]]",
+          "required": true,
+          "description": "List of row dictionaries representing records"
+        },
+        {
+          "name": "columns",
+          "type": "Sequence[str]",
+          "required": true,
+          "description": "Column names to compute pairwise correlations for"
+        },
+        {
+          "name": "corr_fn",
+          "type": "Optional[Callable[[Sequence[float], Sequence[float]], float]]",
+          "required": false,
+          "description": "Optional correlation function (defaults to Pearson)"
+        }
+      ],
+      "output": {
+        "type": "Dict[str, Dict[str, float]]",
+        "description": "Pairwise correlation matrix keyed by column names"
+      },
+      "pure": true,
+      "side_effects": [],
+      "complexity": "O(n * m^2)"
+    },
+    "description": "Compute pairwise correlations between specified columns in a list of row dicts.",
+    "examples": [
+      "tools.correlation_matrix(rows, ['age','income'])",
+      "tools.correlation_matrix(rows, ['a','b','c'], corr_fn=pearson)"
+    ],
+    "tags": ["correlation", "pearson", "statistics", "matrix"],
+    "source": "mylib",
+    "contributor_id": "u-00000000-0000-4000-8000-000000000042",
+    "license": "MIT",
+    "visibility": "public",
+    "created_at": "2026-05-27T06:00:00Z",
+    "updated_at": "2026-06-01T12:00:00Z",
+    "version": "1.0.0",
+    "usage_count": 12456,
+    "last_used_at": "2026-06-10T09:12:00Z",
+    "payout_config": {
+      "share_percent": 0.02,
+      "currency": "USD",
+      "min_payout_threshold": 50,
+      "payment_account_id": "payacct_0000000000000042",
+      "revenue_model": "per_call"
+    },
+    "ai_metadata": {
+      "analyzer_version": "v0.1.2",
+      "confidence": 0.92,
+      "suggested_names": ["pairwise_correlation_matrix"],
+      "key_phrases": ["pairwise correlation", "columns", "pearson"],
+      "generated_description": "Compute pairwise correlations for specified columns in a collection of row dictionaries.",
+      "generated_examples": ["tools.correlation_matrix(rows, ['age','income'])"],
+      "tags": ["correlation", "statistics"],
+      "category_suggestion": "math",
+      "quality_flags": [],
+      "analyzed_at": "2026-06-01T12:10:00Z"
+    },
+    "integrity_hash": "sha256:3a9b2c4d3a9b2c4d3a9b2c4d3a9b2c4d3a9b2c4d3a9b2c4d3a9b2c4d3a9b2c4d"
+  }
+]
 
