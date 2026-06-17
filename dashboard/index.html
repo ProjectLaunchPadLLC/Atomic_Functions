@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atomfun Dashboard - Function Registry & Composition</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.6.2/fuse.min.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">⚛️</div>
+                <h1>atomfun</h1>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="#" data-view="registry" class="nav-item active">
+                    <span class="icon">📚</span> Registry
+                </a>
+                <a href="#" data-view="bag-builder" class="nav-item">
+                    <span class="icon">🛍️</span> Bag Builder
+                </a>
+                <a href="#" data-view="analytics" class="nav-item">
+                    <span class="icon">📊</span> Analytics
+                </a>
+                <a href="#" data-view="contributors" class="nav-item">
+                    <span class="icon">👥</span> Contributors
+                </a>
+                <a href="#" data-view="settings" class="nav-item">
+                    <span class="icon">⚙️</span> Settings
+                </a>
+            </nav>
+            
+            <div class="user-section">
+                <div class="user-avatar">👤</div>
+                <div class="user-info">
+                    <div class="user-name">Developer</div>
+                    <div class="user-status">Connected</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="top-bar">
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="Search functions, categories, tags..." class="search-input">
+                    <button class="search-btn">🔍</button>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-secondary" id="filter-btn">🎚️ Filters</button>
+                    <button class="btn-primary" id="register-btn">+ Register Function</button>
+                </div>
+            </header>
+
+            <!-- View: Registry -->
+            <section id="registry-view" class="view active">
+                <div class="view-header">
+                    <h2>Function Registry</h2>
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <span class="stat-value" id="total-functions">0</span>
+                            <span class="stat-label">Total Functions</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value" id="total-categories">0</span>
+                            <span class="stat-label">Categories</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value" id="active-contributors">0</span>
+                            <span class="stat-label">Contributors</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Filter Pills -->
+                <div class="category-filter">
+                    <button class="category-pill active" data-category="all">All</button>
+                    <button class="category-pill" data-category="math">Math</button>
+                    <button class="category-pill" data-category="text">Text</button>
+                    <button class="category-pill" data-category="data">Data</button>
+                    <button class="category-pill" data-category="image">Image</button>
+                    <button class="category-pill" data-category="io">I/O</button>
+                </div>
+
+                <!-- Functions Grid -->
+                <div class="functions-grid" id="functions-grid">
+                    <!-- Function cards will be generated here -->
+                </div>
+
+                <!-- Empty State -->
+                <div class="empty-state" id="empty-state" style="display: none;">
+                    <div class="empty-icon">🔍</div>
+                    <p>No functions found matching your criteria</p>
+                </div>
+            </section>
+
+            <!-- View: Bag Builder -->
+            <section id="bag-builder-view" class="view">
+                <div class="view-header">
+                    <h2>Bag Builder - Compose Your Toolkit</h2>
+                    <p class="subtitle">Create ephemeral session-scoped micro-libraries</p>
+                </div>
+
+                <div class="bag-builder-container">
+                    <!-- Available Functions Panel -->
+                    <div class="builder-panel">
+                        <h3>Available Functions</h3>
+                        <input type="text" class="builder-search" placeholder="Search functions..." id="bag-search">
+                        <div class="functions-list" id="available-functions">
+                            <!-- Functions will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Bag Canvas -->
+                    <div class="builder-canvas">
+                        <div class="bag-preview">
+                            <div class="bag-header">
+                                <input type="text" class="bag-name-input" placeholder="My Bag" value="my_bag">
+                            </div>
+                            <div class="bag-contents" id="bag-contents">
+                                <div class="empty-bag">
+                                    <p>Drag functions here or click to add</p>
+                                </div>
+                            </div>
+                            <div class="bag-code">
+                                <div class="code-label">Import Code</div>
+                                <pre id="bag-code-preview"><code>import atomfun as atom
+
+# Create your bag:
+my_bag = atom.bag{...}</code></pre>
+                                <button class="btn-secondary" id="copy-code-btn">📋 Copy Code</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bag Properties -->
+                    <div class="builder-panel">
+                        <h3>Bag Properties</h3>
+                        <div class="property-group">
+                            <label>Bag Type</label>
+                            <select id="bag-type">
+                                <option value="custom">Custom Functions</option>
+                                <option value="library">Entire Library</option>
+                                <option value="category">Category Bundle</option>
+                            </select>
+                        </div>
+                        <div class="property-group">
+                            <label>Visibility</label>
+                            <select id="bag-visibility">
+                                <option value="private">Private</option>
+                                <option value="org">Organization</option>
+                                <option value="public">Public</option>
+                            </select>
+                        </div>
+                        <div class="property-group">
+                            <label>Session Duration</label>
+                            <select id="bag-duration">
+                                <option value="session">Current Session</option>
+                                <option value="1h">1 Hour</option>
+                                <option value="24h">24 Hours</option>
+                                <option value="7d">7 Days</option>
+                            </select>
+                        </div>
+                        <button class="btn-primary" id="create-bag-btn">✓ Create Bag</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- View: Analytics -->
+            <section id="analytics-view" class="view">
+                <div class="view-header">
+                    <h2>Analytics & Insights</h2>
+                </div>
+
+                <div class="analytics-grid">
+                    <!-- Usage Over Time -->
+                    <div class="chart-container">
+                        <h3>Function Usage Trend</h3>
+                        <canvas id="usage-chart"></canvas>
+                    </div>
+
+                    <!-- Top Functions -->
+                    <div class="chart-container">
+                        <h3>Top 10 Most Used Functions</h3>
+                        <canvas id="top-functions-chart"></canvas>
+                    </div>
+
+                    <!-- Category Distribution -->
+                    <div class="chart-container">
+                        <h3>Category Distribution</h3>
+                        <canvas id="category-chart"></canvas>
+                    </div>
+
+                    <!-- Revenue Share -->
+                    <div class="chart-container">
+                        <h3>Contributor Revenue Share</h3>
+                        <div id="revenue-table" class="analytics-table">
+                            <!-- Revenue data will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- View: Contributors -->
+            <section id="contributors-view" class="view">
+                <div class="view-header">
+                    <h2>Contributors</h2>
+                    <p class="subtitle">Developers earning revenue through their functions</p>
+                </div>
+
+                <div class="contributors-container">
+                    <div class="contributors-filter">
+                        <input type="text" placeholder="Search contributors..." id="contributor-search">
+                        <select id="sort-contributors">
+                            <option value="earnings">By Earnings</option>
+                            <option value="functions">By Functions</option>
+                            <option value="usage">By Usage</option>
+                        </select>
+                    </div>
+
+                    <div class="contributors-grid" id="contributors-grid">
+                        <!-- Contributor cards will be generated here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- View: Settings -->
+            <section id="settings-view" class="view">
+                <div class="view-header">
+                    <h2>Settings & Configuration</h2>
+                </div>
+
+                <div class="settings-container">
+                    <!-- API Configuration -->
+                    <div class="settings-section">
+                        <h3>API Configuration</h3>
+                        <div class="setting-item">
+                            <label>Registry Endpoint</label>
+                            <input type="text" value="https://api.atomfun.io/v1/registry">
+                        </div>
+                        <div class="setting-item">
+                            <label>API Key</label>
+                            <input type="password" placeholder="Enter your API key">
+                            <button class="btn-secondary">🔄 Regenerate</button>
+                        </div>
+                    </div>
+
+                    <!-- Preferences -->
+                    <div class="settings-section">
+                        <h3>Preferences</h3>
+                        <div class="setting-toggle">
+                            <label>Enable Notifications</label>
+                            <input type="checkbox" checked>
+                        </div>
+                        <div class="setting-toggle">
+                            <label>Auto-load Latest Functions</label>
+                            <input type="checkbox" checked>
+                        </div>
+                        <div class="setting-toggle">
+                            <label>Show Analytics Dashboard</label>
+                            <input type="checkbox" checked>
+                        </div>
+                    </div>
+
+                    <!-- License & Legal -->
+                    <div class="settings-section">
+                        <h3>License & Legal</h3>
+                        <p>Apache License 2.0 - See LICENSE file for details</p>
+                        <button class="btn-secondary">📄 View CLA</button>
+                        <button class="btn-secondary">📋 View Contributing Guide</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal: Function Details -->
+    <div id="function-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-header">
+                <h2 id="modal-function-name"></h2>
+                <div class="function-badges" id="modal-badges"></div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4>Description</h4>
+                    <p id="modal-description"></p>
+                </div>
+                <div class="modal-section">
+                    <h4>Signature</h4>
+                    <pre id="modal-signature"><code></code></pre>
+                </div>
+                <div class="modal-section">
+                    <h4>Examples</h4>
+                    <pre id="modal-examples"><code></code></pre>
+                </div>
+                <div class="modal-section">
+                    <h4>Metadata</h4>
+                    <div id="modal-metadata"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="modal-add-to-bag">Add to Bag</button>
+                <button class="btn-primary" id="modal-import">Import</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Filter Panel -->
+    <div id="filter-modal" class="modal">
+        <div class="modal-content filter-modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Filter Functions</h2>
+            
+            <div class="filter-section">
+                <h4>Category</h4>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" value="math"> Math</label>
+                    <label><input type="checkbox" value="text"> Text</label>
+                    <label><input type="checkbox" value="data"> Data</label>
+                    <label><input type="checkbox" value="image"> Image</label>
+                    <label><input type="checkbox" value="io"> I/O</label>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h4>Visibility</h4>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" value="public" checked> Public</label>
+                    <label><input type="checkbox" value="org"> Organization</label>
+                    <label><input type="checkbox" value="private"> Private</label>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h4>License</h4>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" value="apache2" checked> Apache 2.0</label>
+                    <label><input type="checkbox" value="mit"> MIT</label>
+                    <label><input type="checkbox" value="gpl"> GPL</label>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h4>Quality</h4>
+                <label class="slider-label">Min Confidence: <span id="confidence-value">0%</span></label>
+                <input type="range" min="0" max="100" value="0" id="confidence-slider">
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-secondary" id="reset-filters">Reset</button>
+                <button class="btn-primary" id="apply-filters">Apply Filters</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
